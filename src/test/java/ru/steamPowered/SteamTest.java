@@ -1,23 +1,25 @@
 package ru.steamPowered;
 
 import domain.MainPage;
+import domain.SearchPage;
 import io.github.bonigarcia.wdm.WebDriverManager;
 import org.examples.ConfProperties;
 import org.examples.ServiceConfig;
 import org.junit.Assert;
-import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 
+import java.util.List;
+
 
 public class SteamTest {
 
     public static MainPage mainPage;
+    public static SearchPage searchPage;
     private WebDriver driver;
-    private String gameName = "The witcher";
     public ServiceConfig serviceConfig = new ServiceConfig();
 
     @BeforeTest
@@ -25,26 +27,44 @@ public class SteamTest {
         WebDriverManager.chromedriver().setup();
         driver = serviceConfig.choiseBrowser(ConfProperties.getProperty("browser"));
         mainPage = new MainPage(driver);
+        searchPage = new SearchPage(driver);
         driver.get(ConfProperties.getProperty("loginpage"));
     }
 
     @Test
     public void firstTest() {
 
-        /*try {
-            WebElement email = driver.findElement(By.xpath("//div[@class='home_page_content']"));
-            System.out.println("it's main page");
-        } catch (NoSuchElementException e) {
-            System.out.println("it's not main page");
-        }*/
-        //List<WebElement> email = driver.findElements(By.xpath("//div"));
-        //WebElement email1 = driver.findElement(By.xpath("//div[@class='home_page_content']"));
         Assert.assertTrue(mainPage.allDivs.contains(mainPage.divMainPage));
-        WebElement inputSearch = driver.findElement(By.xpath("//input[@id='store_nav_search_term']"));
-        inputSearch.sendKeys(gameName);
-        WebElement buttonSearch = driver.findElement(By.xpath("//a[@id='store_search_link']//img"));
-        buttonSearch.click();
-        WebElement table = driver.findElement(By.xpath("//div[@id='search_resultsRows']"));
+
+        mainPage.inputSearchTerm.sendKeys(ConfProperties.getProperty("gamename"));
+        mainPage.clickSearchBtn();
+
+        Assert.assertTrue(!searchPage.elementSearchPage.isEmpty());
+        Assert.assertTrue(!searchPage.allRecords.isEmpty());
+
+        searchPage.viewSortType();
+        searchPage.sortByPriceAsc();
+
+        driver.navigate().refresh();
+
+        /*((JavascriptExecutor)driver).executeScript("return document.readyState").equals("complete");
+        new WebDriverWait(driver, 10)
+                .until(ExpectedConditions.elementToBeClickable(searchPage.record));
+        driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+        List<WebElement> table1 = driver.findElements(By.xpath("//div[contains(@class,'search_price_discount')]"));*/
+
+        Assert.assertTrue(checkSortPriceAsc(searchPage.listPrices));
+    }
+
+    private boolean checkSortPriceAsc(List<WebElement> listPrices) {
+        int minPrice = Integer.valueOf(listPrices.get(0).getAttribute("data-price-final"));
+        for (WebElement el : listPrices) {
+            int checkPrice = Integer.valueOf(el.getAttribute("data-price-final"));
+            if (minPrice <= checkPrice) {
+                minPrice = checkPrice;
+            } else return false;
+        }
+        return true;
     }
 
     @AfterTest

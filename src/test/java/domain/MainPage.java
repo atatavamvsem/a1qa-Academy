@@ -29,10 +29,30 @@ public class MainPage {
     public WebElement divMainPage;
 
     /**
+     * определение титла главной страницы
+     */
+    @FindBy(xpath = "//head//title")
+    public WebElement title;
+
+    /**
      * определение локатора поля ввода текста для поиска
      */
     @FindBy(xpath = "//input[@id='store_nav_search_term']")
-    private WebElement inputSearchTerm;
+    public WebElement inputSearchTerm;
 
+    /**
+     * определение локатора кнопки поиска
+     */
+    @FindBy(xpath = "//a[@id='store_search_link']//img")
+    public WebElement buttonSearch;
+
+    public String getTitle() {
+        String userName = title.getText();
+        return userName;
+    }
+
+    public void clickSearchBtn(){
+        buttonSearch.click();
+    }
 
 }
