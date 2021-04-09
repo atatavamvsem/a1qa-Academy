@@ -1,5 +1,6 @@
 package domain;
 
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -7,15 +8,11 @@ import org.openqa.selenium.support.PageFactory;
 
 import java.util.List;
 
-public class MainPage {
+public class MainPage extends BaseForm{
 
-    public WebDriver driver;
+    public MainPage() {
 
-    public MainPage(WebDriver driver) {
-        PageFactory.initElements(driver, this);
-        this.driver = driver;
     }
-
     /**
      * определение локатора все дивы на странице
      */
@@ -25,8 +22,8 @@ public class MainPage {
     /**
      * определение локатора div главной страницы
      */
-    @FindBy(xpath = "//div[@class='home_page_content']")
-    public WebElement divMainPage;
+
+    public TextField labelMainPage = new TextField(By.xpath("//div[@class='home_page_content']//h1"), "labelMainPage");
 
     /**
      * определение титла главной страницы
@@ -37,22 +34,23 @@ public class MainPage {
     /**
      * определение локатора поля ввода текста для поиска
      */
-    @FindBy(xpath = "//input[@id='store_nav_search_term']")
-    public WebElement inputSearchTerm;
+    private TextField inputSearchTerm = new TextField(By.xpath("//input[@id='store_nav_search_term']"), "inputSearchMainPage");;
 
     /**
      * определение локатора кнопки поиска
      */
-    @FindBy(xpath = "//a[@id='store_search_link']//img")
-    public WebElement buttonSearch;
 
-    public String getTitle() {
-        String userName = title.getText();
-        return userName;
-    }
+
+    private Button buttonSearch = new Button(By.xpath("//a[@id='store_search_link']//img"), "buttonSearchMainPage");
+
+
+
 
     public void clickSearchBtn(){
         buttonSearch.click();
     }
 
+    public void inputTextSearch(String gameName){
+        inputSearchTerm.sendText(gameName);
+    }
 }

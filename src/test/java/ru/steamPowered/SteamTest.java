@@ -2,41 +2,42 @@ package ru.steamPowered;
 
 import domain.MainPage;
 import domain.SearchPage;
-import io.github.bonigarcia.wdm.WebDriverManager;
-import org.examples.ConfProperties;
-import org.examples.ServiceConfig;
+import org.examples.ResourcesProperties;
+import org.examples.WebDriverManager;
 import org.junit.Assert;
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 
 public class SteamTest {
 
-    public static MainPage mainPage;
-    public static SearchPage searchPage;
-    private WebDriver driver;
-    public ServiceConfig serviceConfig = new ServiceConfig();
+    private static MainPage mainPage = new MainPage();
+    private static SearchPage searchPage;
+    private WebDriverManager webDriverManager = WebDriverManager.getInstance();
+    private WebDriver driver = webDriverManager.getDriver();
 
     @BeforeTest
     public void setUp() {
-        WebDriverManager.chromedriver().setup();
-        driver = serviceConfig.choiseBrowser(ConfProperties.getProperty("browser"));
-        mainPage = new MainPage(driver);
+        //driver = webDriverManager.choseBrowser();
         searchPage = new SearchPage(driver);
-        driver.get(ConfProperties.getProperty("loginpage"));
+        driver.get(ResourcesProperties.getConfProperty("loginPage"));
     }
 
     @Test
     public void firstTest() {
 
-        Assert.assertTrue(mainPage.allDivs.contains(mainPage.divMainPage));
-
-        mainPage.inputSearchTerm.sendKeys(ConfProperties.getProperty("gamename"));
+        Assert.assertTrue("it's not main page",mainPage.isDisplayed(mainPage.labelMainPage));
+        mainPage.inputTextSearch(ResourcesProperties.getDataProperty("gameName"));
         mainPage.clickSearchBtn();
 
         Assert.assertTrue(!searchPage.elementSearchPage.isEmpty());
@@ -45,7 +46,10 @@ public class SteamTest {
         searchPage.viewSortType();
         searchPage.sortByPriceAsc();
 
-        driver.navigate().refresh();
+
+
+        WebDriverWait wait = new WebDriverWait(driver, Long.parseLong(ResourcesProperties.getConfProperty("waitLoadingPageSeconds")));
+        wait.until(ExpectedConditions.attributeToBe(By.xpath("//div[@id='search_result_container']"), "style", ""));
 
         /*((JavascriptExecutor)driver).executeScript("return document.readyState").equals("complete");
         new WebDriverWait(driver, 10)

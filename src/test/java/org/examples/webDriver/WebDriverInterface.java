@@ -2,6 +2,6 @@ package org.examples.webDriver;
 
 import org.openqa.selenium.WebDriver;
 
-public interface WebDriverInteface {
+public interface WebDriverInterface {
     WebDriver setUp();
 }
