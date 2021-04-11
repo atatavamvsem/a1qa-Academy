@@ -1,61 +1,55 @@
 package domain;
 
-import org.openqa.selenium.WebDriver;
+import org.examples.ResourcesProperties;
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.FindBy;
-import org.openqa.selenium.support.PageFactory;
 
 import java.util.List;
 
-public class SearchPage {
-    public WebDriver driver;
+public class SearchPage extends BaseForm {
 
-    public SearchPage(WebDriver driver) {
-        PageFactory.initElements(driver, this);
-        this.driver = driver;
+    public SearchPage() {
+        super(idSearchPage, "idMainPage");
     }
 
-    /**
-     * определение локатора результатов поиска
-     */
-    @FindBy(xpath = "//div[contains(@id,'search_resultsRows')]//a")
-    public List<WebElement> allRecords;
+    private static BaseElement searchResult = new BaseElement(By.xpath("//div[contains(@id,'search_resultsRows')]//a"), "searchResult");
 
-    /**
-     * определение локатора результатов поиска
-     */
-    @FindBy(xpath = "//div[contains(@id,'search_resultsRows')]//a[1]")
-    public WebElement record;
+    private static BaseElement listPrices = new BaseElement(By.xpath("//div[contains(@class,'search_price_discount')]"), "listPrices");
 
-    /**
-     * определение локатора с ценами записей
-     */
-    @FindBy(xpath = "//div[contains(@class,'search_price_discount')]")
-    public List<WebElement> listPrices;
+    private static TextField idSearchPage = new TextField(By.xpath("//div[@id='search_result_container']"), "idSearchPage");
 
-    /**
-     * определение локатора элемента страницы поиска
-     */
-    @FindBy(xpath = "//body[contains(@class,'search_page')]")
-    public List<WebElement> elementSearchPage;
+    private static Button sortTrigger = new Button(By.xpath("//a[@id='sort_by_trigger']"), "sortTrigger");
 
-    /**
-     * определение локатора тригера сортировки
-     */
-    @FindBy(xpath = "//a[@id='sort_by_trigger']")
-    public WebElement sortTrigger;
+    private static Button sortByPriceAsc = new Button(By.xpath("//a[@id='Price_ASC']"), "sortByPriceAsc");
 
-    /**
-     * определение локатора типа сортировки по возрастанию цены
-     */
-    @FindBy(xpath = "//a[@id='Price_ASC']")
-    public WebElement sortByPriceAsc;
-
-    public void viewSortType(){
+    public void viewSortType() {
         sortTrigger.click();
     }
 
     public void sortByPriceAsc() {
         sortByPriceAsc.click();
+    }
+
+    public boolean checkResultSearch() {
+        return searchResult.findElements().size() > Integer.valueOf(ResourcesProperties.getDataProperty("numberGame"));
+    }
+
+    public boolean checkSortPriceAsc() {
+        this.waitBeforeCheck();
+        return checkSortPriceAsc(listPrices.findElements());
+    }
+
+
+
+    private boolean checkSortPriceAsc(List<WebElement> listPrices) {
+        int minPrice = Integer.valueOf(listPrices.get(0).getAttribute("data-price-final"));
+        int checkPrice;
+        for (WebElement el : listPrices) {
+            checkPrice = Integer.valueOf(el.getAttribute("data-price-final"));
+            if (minPrice <= checkPrice) {
+                minPrice = checkPrice;
+            } else return false;
+        }
+        return true;
     }
 }

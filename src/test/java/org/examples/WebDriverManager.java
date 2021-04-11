@@ -18,7 +18,7 @@ public class WebDriverManager {
         return instance;
     }
 
-    public WebDriver choseBrowser(String browser) {
+    private WebDriver choseBrowser(String browser) {
 
         if(browser.equals("chrome")){
             driver = chromeDriverSet.setUp();
