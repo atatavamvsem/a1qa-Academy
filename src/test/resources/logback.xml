@@ -35,6 +35,11 @@
         <appender-ref ref="FILE"/>
     </logger>
 
+    <logger name="org.examples" level="debug" additivity="false">
+        <appender-ref ref="CONSOLE"/>
+        <appender-ref ref="FILE"/>
+    </logger>
+
     <root level="error">
         <appender-ref ref="CONSOLE"/>
     </root>
