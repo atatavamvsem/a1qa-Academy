@@ -1,5 +1,4 @@
 <configuration>
-    <property name="HOME_LOG" value="logs/app.log"/>
 
     <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
         <layout class="ch.qos.logback.classic.PatternLayout">
@@ -26,7 +25,12 @@
         </encoder>
     </appender>
 
-    <logger name="domain" level="debug" additivity="false">
+    <logger name="domain.elements" level="debug" additivity="false">
+        <appender-ref ref="CONSOLE"/>
+        <appender-ref ref="FILE"/>
+    </logger>
+
+    <logger name="ru.steamPowered" level="debug" additivity="false">
         <appender-ref ref="CONSOLE"/>
         <appender-ref ref="FILE"/>
     </logger>

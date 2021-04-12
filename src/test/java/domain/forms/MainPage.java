@@ -1,5 +1,7 @@
-package domain;
+package domain.forms;
 
+import domain.elements.Button;
+import domain.elements.TextField;
 import org.examples.ResourcesProperties;
 import org.openqa.selenium.By;
 

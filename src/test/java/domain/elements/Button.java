@@ -1,4 +1,4 @@
-package domain;
+package domain.elements;
 
 import org.openqa.selenium.By;
 

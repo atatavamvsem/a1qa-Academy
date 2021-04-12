@@ -1,10 +1,11 @@
-package domain;
+package domain.forms;
 
+import domain.elements.BaseElement;
+import domain.elements.Button;
+import domain.elements.TextField;
 import org.examples.ResourcesProperties;
+import org.examples.UtilManager;
 import org.openqa.selenium.By;
-import org.openqa.selenium.WebElement;
-
-import java.util.List;
 
 public class SearchPage extends BaseForm {
 
@@ -12,7 +13,7 @@ public class SearchPage extends BaseForm {
         super(idSearchPage, "idMainPage");
     }
 
-    private static BaseElement searchResult = new BaseElement(By.xpath("//div[contains(@id,'search_resultsRows')]//a"), "searchResult");
+    private static BaseElement listSearchResult = new BaseElement(By.xpath("//div[contains(@id,'search_resultsRows')]//a"), "listSearchResult");
 
     private static BaseElement listPrices = new BaseElement(By.xpath("//div[contains(@class,'search_price_discount')]"), "listPrices");
 
@@ -31,25 +32,15 @@ public class SearchPage extends BaseForm {
     }
 
     public boolean checkResultSearch() {
-        return searchResult.findElements().size() > Integer.valueOf(ResourcesProperties.getDataProperty("numberGame"));
+        return listSearchResult.findElements().size() > Integer.valueOf(ResourcesProperties.getDataProperty("numberGame"));
     }
 
     public boolean checkSortPriceAsc() {
         this.waitBeforeCheck();
-        return checkSortPriceAsc(listPrices.findElements());
+        return UtilManager.checkSortPriceAsc(listPrices.findElements());
     }
 
 
 
-    private boolean checkSortPriceAsc(List<WebElement> listPrices) {
-        int minPrice = Integer.valueOf(listPrices.get(0).getAttribute("data-price-final"));
-        int checkPrice;
-        for (WebElement el : listPrices) {
-            checkPrice = Integer.valueOf(el.getAttribute("data-price-final"));
-            if (minPrice <= checkPrice) {
-                minPrice = checkPrice;
-            } else return false;
-        }
-        return true;
-    }
+
 }

@@ -1,4 +1,4 @@
-package domain;
+package domain.elements;
 
 import org.examples.WebDriverManager;
 import org.openqa.selenium.By;
@@ -22,22 +22,23 @@ public class BaseElement {
 
 
     public void click(){
-        LOGGER.debug("Click button : ", this.name);
-        WebElement elem = driver.findElement(this.locator);
-        elem.click();
+        LOGGER.debug("Click button : {}", this.name);
+        findElement(this).click();
     }
 
     public List<WebElement> findElements(){
+        LOGGER.debug("Finding elements: {}", this.name);
         return driver.findElements(this.locator);
     }
 
     public static WebElement findElement(BaseElement element){
+        LOGGER.debug("Finding element: {}", element.name);
         return driver.findElement(element.locator);
     }
 
     public  boolean isDisplayed(){
+        LOGGER.debug("Check is element displayed: {}", this.name);
         return findElements().size() > 0;
     }
-
 
 }

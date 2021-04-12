@@ -5,10 +5,10 @@ import java.io.IOException;
 import java.util.Properties;
 
 public class ResourcesProperties {
-    protected static FileInputStream fileConfigInputStream;
-    protected static FileInputStream fileTestDataInputStream;
-    protected static Properties CONF_PROPERTIES;
-    protected static Properties DATA_PROPERTIES;
+    private static FileInputStream fileConfigInputStream;
+    private static FileInputStream fileTestDataInputStream;
+    private static Properties CONF_PROPERTIES;
+    private static Properties DATA_PROPERTIES;
     static {
         try {
             //указание пути до файла с настройками

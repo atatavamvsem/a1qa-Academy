@@ -7,7 +7,6 @@ import org.openqa.selenium.firefox.FirefoxDriver;
 public class FirefoxDriverSet implements WebDriverInterface {
     public WebDriver setUp(){
         WebDriverManager.firefoxdriver().setup();
-        WebDriver driver = new FirefoxDriver();
-        return driver;
+        return new FirefoxDriver();
     }
 }
